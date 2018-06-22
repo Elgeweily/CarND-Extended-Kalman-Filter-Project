@@ -53,8 +53,8 @@ FusionEKF::FusionEKF() {
 	  0, 0, 0.09;
   
   //acceleration noise components
-  noise_ax_ = 5;
-  noise_ay_ = 5;
+  noise_ax_ = 9;
+  noise_ay_ = 9;
 
   /**
   TODO:
@@ -93,15 +93,9 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       Convert radar from polar to cartesian coordinates and initialize state.
       */
       float range = measurement_pack.raw_measurements[0];
-      float angle = measurement_pack.raw_measurements[1];
-      float range_rate = measurement_pack.raw_measurements[2];
-      // adjust angle range??
-      float pos_x = range * cos(angle);
-      float pos_y = range * sin(angle);
-      float vel_x = range_rate * cos(angle);
-      float vel_y = range_rate * sin(angle);
+      float bearing = measurement_pack.raw_measurements[1];
         
-      ekf_.x_ << pos_x, pos_y, vel_x, vel_y;
+      ekf_.x_ << range * cos(bearing), range * sin(bearing), 0, 0;
     }
     else if (measurement_pack.sensor_type_ == MeasurementPackage::LASER) {
       /**
