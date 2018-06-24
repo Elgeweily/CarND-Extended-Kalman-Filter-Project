@@ -44,14 +44,14 @@ private:
   Eigen::VectorXd x_;
   Eigen::MatrixXd P_;
   Eigen::MatrixXd F_;
-  Eigen::MatrixXd H_laser_;
+  Eigen::MatrixXd H_laser;
   Eigen::MatrixXd Hj_;
-  Eigen::MatrixXd R_laser_;
-  Eigen::MatrixXd R_radar_;
+  Eigen::MatrixXd R_laser;
+  Eigen::MatrixXd R_radar;
   Eigen::MatrixXd Q_;
 
-  float noise_ax_;
-  float noise_ay_;
+  float noise_ax;
+  float noise_ay;
 };
 
 #endif /* FusionEKF_H_ */

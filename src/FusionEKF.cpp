@@ -21,10 +21,10 @@ FusionEKF::FusionEKF() {
   x_ = VectorXd(4);
   P_ = MatrixXd(4, 4);
   F_ = MatrixXd(4, 4);
-  H_laser_ = MatrixXd(2, 4);
+  H_laser = MatrixXd(2, 4);
   Hj_ = MatrixXd(3, 4);
-  R_laser_ = MatrixXd(2, 2);
-  R_radar_ = MatrixXd(3, 3);
+  R_laser = MatrixXd(2, 2);
+  R_radar = MatrixXd(3, 3);
   Q_ = MatrixXd(4, 4);
 
   //object covariance matrix
@@ -34,20 +34,20 @@ FusionEKF::FusionEKF() {
 	  0, 0, 0, 1000;
 
   //measurement matrix - laser
-  H_laser_ << 1, 0, 0, 0,
+  H_laser << 1, 0, 0, 0,
 	  0, 1, 0, 0;
 
   //measurement covariance matrix - laser
-  R_laser_ << 0.0225, 0,
+  R_laser << 0.0225, 0,
 	  0, 0.0225;
 
   //measurement covariance matrix - radar
-  R_radar_ << 0.09, 0, 0,
+  R_radar << 0.09, 0, 0,
 	  0, 0.0009, 0,
 	  0, 0, 0.09;
 
-  noise_ax_ = 9;
-  noise_ay_ = 9;
+  noise_ax = 9;
+  noise_ay = 9;
 
   /**
   TODO:
@@ -97,7 +97,11 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       x_ << measurement_pack.raw_measurements[0], measurement_pack.raw_measurements[1], 0, 0;
     }
 
-	ekf_.Init();
+	ekf_.Init(x_, P_, F_, H_laser, R_laser, Q_);
+
+	void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
+		MatrixXd &H_laser_in, MatrixXd &Hj_in, MatrixXd &R_laser_in,
+		MatrixXd &R_radar_in, MatrixXd &Q_in) {
 
     // done initializing, no need to predict or update
     is_initialized_ = true;
@@ -145,9 +149,12 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
     // Radar updates
+	  Hj_ = Tools::CalculateJacobian(x_);
+	  ekf_.Init(x_, P_, F_, Hj, R_radar, Q_);
 	  ekf_.UpdateEKF();
   } else {
     // Laser updates
+	  ekf_.Init(x_, P_, F_, H_laser, R_laser, Q_);
 	  ekf_.Update();
   }
 
