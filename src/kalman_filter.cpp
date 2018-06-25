@@ -58,17 +58,17 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 
 	// define measurement function
 	VectorXd h_func = VectorXd(3);
-	h_func[0] = sqrt(pow(x_[0], 2) + pow(x_[1], 2));
-	h_func[1] = atan2(x_[1], x_[0]);
-	h_func[2] = (x_[0] * x_[2] + x_[1] * x_[3]) / sqrt(pow(x_[0], 2) + pow(x_[1], 2));
+	h_func(0) = sqrt(pow(x_(0), 2) + pow(x_(1), 2));
+	h_func(1) = atan2(x_(1), x_(0));
+	h_func(2) = (x_(0) * x_(2) + x_(1) * x_(3) / sqrt(pow(x_(0), 2) + pow(x_(1), 2));
 
 	VectorXd y = z - h_func;
 
-	while (y[1] > pi) {
-		y[1] -= 2*pi
+	while (y(1) > pi) {
+		y(1) -= 2*pi
 	}
-	while (y[1] < -pi) {
-		y[1] += 2*pi
+	while (y(1) < -pi) {
+		y(1) += 2*pi
 	}
 
 	MatrixXd S = H_ * P_ * H_.transpose() + R_;
