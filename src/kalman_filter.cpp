@@ -1,4 +1,4 @@
-#define pi 3.1415926535897
+#define M_pi 3.1415926535897
 
 #include "kalman_filter.h"
 #include <cmath>
@@ -41,12 +41,11 @@ void KalmanFilter::Update(const VectorXd &z) {
 
 	VectorXd y = z - H_ * x_;
 	MatrixXd S = H_ * P_ * H_.transpose() + R_;
-	MatrixXd K = P_ * Ht * S.inverse();
-	MatrixXd I = MatrixXd::Identity(x_size, x_size);
+	MatrixXd K = P_ * H_.transpose() * S.inverse();
+	MatrixXd I = MatrixXd::Identity(x_.size(), x_.size());
 
 	//new estimate
 	x_ = x_ + (K * y);
-	long x_size = x_.size();
 	P_ = (I - K * H_) * P_;
 }
 
@@ -60,23 +59,22 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	VectorXd h_func = VectorXd(3);
 	h_func(0) = sqrt(pow(x_(0), 2) + pow(x_(1), 2));
 	h_func(1) = atan2(x_(1), x_(0));
-	h_func(2) = (x_(0) * x_(2) + x_(1) * x_(3) / sqrt(pow(x_(0), 2) + pow(x_(1), 2));
+	h_func(2) = (x_(0) * x_(2) + x_(1) * x_(3) / sqrt(pow(x_(0), 2) + pow(x_(1), 2)));
 
 	VectorXd y = z - h_func;
 
-	while (y(1) > pi) {
-		y(1) -= 2*pi
+	while (y(1) > M_pi) {
+		y(1) -= 2 * M_pi;
 	}
-	while (y(1) < -pi) {
-		y(1) += 2*pi
+	while (y(1) < -M_pi) {
+		y(1) += 2 * M_pi;
 	}
 
 	MatrixXd S = H_ * P_ * H_.transpose() + R_;
-	MatrixXd K = P_ * Ht * S.inverse();
-	MatrixXd I = MatrixXd::Identity(x_size, x_size);
+	MatrixXd K = P_ * H_.transpose() * S.inverse();
+	MatrixXd I = MatrixXd::Identity(x_.size(), x_.size());
 
 	//new estimate
 	x_ = x_ + (K * y);
-	long x_size = x_.size();
 	P_ = (I - K * H_) * P_;
 }

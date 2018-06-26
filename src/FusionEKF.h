@@ -31,6 +31,11 @@ public:
   */
   KalmanFilter ekf_;
 
+  /**
+  * RMSE and Jacobian Equations.
+  */
+  Tools tools_;
+
 private:
   // check whether the tracking toolbox was initialized or not (first measurement)
   bool is_initialized_;
@@ -49,6 +54,8 @@ private:
   Eigen::MatrixXd R_laser;
   Eigen::MatrixXd R_radar;
   Eigen::MatrixXd Q_;
+
+  Eigen::VectorXd z_;
 
   float noise_ax;
   float noise_ay;

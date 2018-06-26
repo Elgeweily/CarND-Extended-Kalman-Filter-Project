@@ -85,8 +85,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       /**
       Convert radar from polar to cartesian coordinates and initialize state.
       */
-      float range = measurement_pack.raw_measurements[0];
-      float bearing = measurement_pack.raw_measurements[1];
+      float range = measurement_pack.raw_measurements_(0);
+      float bearing = measurement_pack.raw_measurements_(1);
         
       x_ << range * cos(bearing), range * sin(bearing), 0, 0;
     }
@@ -94,14 +94,10 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
       /**
       Initialize state.
       */  
-      x_ << measurement_pack.raw_measurements[0], measurement_pack.raw_measurements[1], 0, 0;
+      x_ << measurement_pack.raw_measurements_(0), measurement_pack.raw_measurements_(1), 0, 0;
     }
 
 	ekf_.Init(x_, P_, F_, H_laser, R_laser, Q_);
-
-	void KalmanFilter::Init(VectorXd &x_in, MatrixXd &P_in, MatrixXd &F_in,
-		MatrixXd &H_laser_in, MatrixXd &Hj_in, MatrixXd &R_laser_in,
-		MatrixXd &R_radar_in, MatrixXd &Q_in) {
 
     // done initializing, no need to predict or update
     is_initialized_ = true;
@@ -147,15 +143,17 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
      * Update the state and covariance matrices.
    */
 
+  z_ = measurement_pack.raw_measurements_;
+
   if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
     // Radar updates
-	  Hj_ = Tools::CalculateJacobian(x_);
-	  ekf_.Init(x_, P_, F_, Hj, R_radar, Q_);
-	  ekf_.UpdateEKF();
+	  Hj_ = tools_.CalculateJacobian(x_);
+	  ekf_.Init(x_, P_, F_, Hj_, R_radar, Q_);
+	  ekf_.UpdateEKF(z_);
   } else {
     // Laser updates
 	  ekf_.Init(x_, P_, F_, H_laser, R_laser, Q_);
-	  ekf_.Update();
+	  ekf_.Update(z_);
   }
 
   // print the output
