@@ -59,7 +59,7 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	VectorXd h_func = VectorXd(3);
 	h_func(0) = sqrt(pow(x_(0), 2) + pow(x_(1), 2));
 	h_func(1) = atan2(x_(1), x_(0));
-	h_func(2) = (x_(0) * x_(2) + x_(1) * x_(3) / sqrt(pow(x_(0), 2) + pow(x_(1), 2)));
+	h_func(2) = (x_(0) * x_(2) + x_(1) * x_(3)) / sqrt(pow(x_(0), 2) + pow(x_(1), 2));
 
 	VectorXd y = z - h_func;
 
@@ -75,6 +75,6 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	MatrixXd I = MatrixXd::Identity(x_.size(), x_.size());
 
 	//new estimate
-	x_ = x_ + (K * y);
-	P_ = (I - K * H_) * P_;
+	x_test = x_ + (K * y);
+	P_test = (I - K * H_) * P_;
 }
