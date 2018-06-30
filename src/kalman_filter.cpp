@@ -75,6 +75,6 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
 	MatrixXd I = MatrixXd::Identity(x_.size(), x_.size());
 
 	//new estimate
-	x_test = x_ + (K * y);
-	P_test = (I - K * H_) * P_;
+	x_ = x_ + (K * y);
+	P_ = (I - K * H_) * P_;
 }
