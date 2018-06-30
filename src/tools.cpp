@@ -52,7 +52,9 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
     * Calculate a Jacobian here.
   */
 
-	MatrixXd Hj(3, 4);
+	MatrixXd Hj_(3, 4);
+	Hj_.setZero();
+
 	//recover state parameters
 	float px = x_state(0);
 	float py = x_state(1);
@@ -62,13 +64,13 @@ MatrixXd Tools::CalculateJacobian(const VectorXd& x_state) {
 	//check division by zero
 	if ((pow(px, 2) + pow(py, 2)) < 0.0001) {
 		cout << "error, division by zero" << endl;
-		return Hj;
+		return Hj_;
 	}
 
 	//compute the Jacobian matrix
-	Hj << (px / sqrt(pow(px, 2) + pow(py, 2))), (py / sqrt(pow(px, 2) + pow(py, 2))), 0, 0,
+	Hj_ << (px / sqrt(pow(px, 2) + pow(py, 2))), (py / sqrt(pow(px, 2) + pow(py, 2))), 0, 0,
 		-(py / (pow(px, 2) + pow(py, 2))), (px / (pow(px, 2) + pow(py, 2))), 0, 0,
-		((py*(vx*py - vy * px)) / (pow(pow(px, 2) + pow(py, 2), 1.5))), ((px*(vy*px - vx * py)) / (pow(pow(px, 2) + pow(py, 2), 1.5))), (px / sqrt(pow(px, 2) + pow(py, 2))), (py / sqrt(pow(px, 2) + pow(py, 2)));
+		((py * (vx * py - vy * px)) / (pow(pow(px, 2) + pow(py, 2), 1.5))), ((px * (vy * px - vx * py)) / (pow(pow(px, 2) + pow(py, 2), 1.5))), (px / sqrt(pow(px, 2) + pow(py, 2))), (py / sqrt(pow(px, 2) + pow(py, 2)));
 
-	return Hj;
+	return Hj_;
 }
