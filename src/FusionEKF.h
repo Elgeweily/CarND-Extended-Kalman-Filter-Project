@@ -46,19 +46,17 @@ private:
 
   // tool object used to compute Jacobian and RMSE
   Tools tools;
-  Eigen::VectorXd x;
-  Eigen::MatrixXd P;
-  Eigen::MatrixXd F;
+
   Eigen::MatrixXd H_laser;
   Eigen::MatrixXd Hj;
   Eigen::MatrixXd R_laser;
   Eigen::MatrixXd R_radar;
-  Eigen::MatrixXd Q;
 
   Eigen::VectorXd z;
 
   float noise_ax;
   float noise_ay;
+  int counter;
 };
 
 #endif /* FusionEKF_H_ */
