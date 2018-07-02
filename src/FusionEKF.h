@@ -31,18 +31,12 @@ public:
   */
   KalmanFilter ekf_;
 
-  /**
-  * RMSE and Jacobian Equations.
-  */
-  Tools tools_;
-
 private:
   // check whether the tracking toolbox was initialized or not (first measurement)
   bool is_initialized_;
 
   // previous timestamp
   long long previous_timestamp_;
-  float dt;
 
   // tool object used to compute Jacobian and RMSE
   Tools tools;
@@ -53,10 +47,6 @@ private:
   Eigen::MatrixXd R_radar;
 
   Eigen::VectorXd z;
-
-  float noise_ax;
-  float noise_ay;
-  int counter;
 };
 
 #endif /* FusionEKF_H_ */

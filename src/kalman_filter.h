@@ -8,14 +8,8 @@ public:
   // state vector
   Eigen::VectorXd x_;
 
-  // state vector
-  Eigen::VectorXd x_test;
-
   // state covariance matrix
   Eigen::MatrixXd P_;
-
-  // state covariance matrix
-  Eigen::MatrixXd P_test;
 
   // state transition matrix
   Eigen::MatrixXd F_;

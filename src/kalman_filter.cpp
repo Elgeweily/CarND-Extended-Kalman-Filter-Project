@@ -14,21 +14,12 @@ KalmanFilter::KalmanFilter() {}
 KalmanFilter::~KalmanFilter() {}
 
 void KalmanFilter::Predict() {
-  /**
-  TODO:
-    * predict the state
-  */
-
 	x_ = F_ * x_;
 	P_ = F_ * P_ * F_.transpose() + Q_;
 }
 
 void KalmanFilter::Update(const VectorXd &z) {
-  /**
-  TODO:
-    * update the state by using Kalman Filter equations
-  */
-
+	// Kalman filter equations
 	VectorXd y = z - H_ * x_;
 	MatrixXd S = H_ * P_ * H_.transpose() + R_;
 	MatrixXd K = P_ * H_.transpose() * S.inverse();
@@ -40,19 +31,16 @@ void KalmanFilter::Update(const VectorXd &z) {
 }
 
 void KalmanFilter::UpdateEKF(const VectorXd &z) {
-  /**
-  TODO:
-    * update the state by using Extended Kalman Filter equations
-  */
-
 	// define measurement function
 	VectorXd h_func = VectorXd(3);
 	h_func(0) = sqrt(pow(x_(0), 2) + pow(x_(1), 2));
 	h_func(1) = atan2(x_(1), x_(0));
 	h_func(2) = (x_(0) * x_(2) + x_(1) * x_(3)) / sqrt(pow(x_(0), 2) + pow(x_(1), 2));
 
+	// extended Kalman filter equations
 	VectorXd y = z - h_func;
 
+	// limit bearing angle between -pi & pi
 	while (y(1) > M_pi) {
 		y(1) -= 2 * M_pi;
 	}
